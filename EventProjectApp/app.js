@@ -13,6 +13,10 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage });
+// Ensure upload and data directories exist
+const ensureDir = (p) => { try { if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true }); } catch(e) { console.error('Failed to ensure dir', p, e); } };
+ensureDir('public/images');
+ensureDir('public/data');
 //Set up view engine from ejs library
 const app = express();
 //Set up view engine
@@ -24,6 +28,42 @@ app.use(express.static('public'))
 app.use(express.urlencoded({
     extended: false
 }));
+
+// Routes for membership page
+app.get('/membership', (req, res) => {
+    res.render('membership', { member: null });
+});
+
+app.post('/membership', upload.single('profileImage'), (req, res) => {
+    const member = {
+        fullName: req.body.fullName || '',
+        email: req.body.email || '',
+        phone: req.body.phone || '',
+        type: req.body.type || '',
+        image: req.file ? '/images/' + req.file.filename : null,
+        createdAt: new Date().toISOString()
+    };
+
+    const dataDir = 'public/data';
+    const filePath = `${dataDir}/members.json`;
+    let members = [];
+    try {
+        if (fs.existsSync(filePath)) {
+            members = JSON.parse(fs.readFileSync(filePath));
+        }
+    } catch (e) {
+        console.error('Error reading members.json', e);
+        members = [];
+    }
+    members.push(member);
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(members, null, 2));
+    } catch (e) {
+        console.error('Error writing members.json', e);
+    }
+
+    res.render('membership', { member });
+});
 
 //start the server
 const PORT = process.env.PORT || 3001;

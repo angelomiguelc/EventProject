@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Membership</title>
+	<style>
+		body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:24px;background:#f7f7f9}
+		.container{max-width:860px;margin:0 auto;background:#fff;padding:24px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+		h1{margin-top:0}
+		form .row{display:flex;gap:12px}
+		label{display:block;font-size:13px;margin-bottom:6px}
+		input[type=text],input[type=email],select{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
+		.left{flex:2}.right{flex:1}
+		.preview{border:1px dashed #ddd;padding:12px;border-radius:6px;text-align:center}
+		.preview img{max-width:100%;height:auto;border-radius:6px}
+		.btn{display:inline-block;padding:10px 16px;border-radius:6px;background:#0b75ef;color:#fff;border:none;cursor:pointer}
+		.success{margin-top:16px;padding:12px;background:#e6ffed;border:1px solid #c6f0d0;border-radius:6px}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Join as a Member</h1>
+		<p>Complete the form to become a member of the Event Platform.</p>
+
+		<form action="/membership" method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="left">
+					<label for="fullName">Full name</label>
+					<input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required />
+
+					<label for="email" style="margin-top:12px">Email</label>
+					<input id="email" name="email" type="email" placeholder="jane@example.com" required />
+
+					<label for="phone" style="margin-top:12px">Phone</label>
+					<input id="phone" name="phone" type="text" placeholder="+65 6123 4567" />
+
+					<label for="type" style="margin-top:12px">Membership type</label>
+					<select id="type" name="type">
+						<option value="Free">Free</option>
+						<option value="Premium">Premium</option>
+						<option value="VIP">VIP</option>
+					</select>
+
+					<div style="margin-top:14px">
+						<button class="btn" type="submit">Submit</button>
+					</div>
+				</div>
+
+				<div class="right">
+					<label for="profileImage">Profile image</label>
+					<div class="preview">
+						<img id="imgPreview" src="/images/default-avatar.png" alt="preview" />
+						<div style="margin-top:8px">
+							<input id="profileImage" name="profileImage" type="file" accept="image/*" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<% if (member) { %>
+			<div class="success">
+				<strong>Member saved</strong>
+				<div style="display:flex;gap:12px;margin-top:8px;align-items:center">
+					<div style="width:84px">
+						<% if (member.image) { %>
+							<img src="<%= member.image %>" style="width:84px;border-radius:6px" />
+						<% } else { %>
+							<img src="/images/default-avatar.png" style="width:84px;border-radius:6px" />
+						<% } %>
+					</div>
+					<div>
+						<div><strong><%= member.fullName %></strong></div>
+						<div><%= member.email %></div>
+						<div><%= member.phone %></div>
+						<div>Type: <%= member.type %></div>
+					</div>
+				</div>
+			</div>
+		<% } %>
+
+	</div>
+
+	<script>
+		const input = document.getElementById('profileImage');
+		const preview = document.getElementById('imgPreview');
+		input && input.addEventListener('change', (e) => {
+			const file = e.target.files && e.target.files[0];
+			if (!file) return;
+			const url = URL.createObjectURL(file);
+			preview.src = url;
+		});
+	</script>
+</body>
+</html>
