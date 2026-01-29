@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verification | ChainEvent</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --blue-50: #eff6ff;
+        --slate-700: #334155;
+        --slate-500: #64748b;
+        --slate-200: #e2e8f0;
+        --green-600: #16a34a;
+        --green-50: #ecfdf3;
+        --green-200: #86efac;
+        --amber-500: #f59e0b;
+        --amber-50: #fffbeb;
+        --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: #f8fafc;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+        border: none;
+        cursor: pointer;
+      }
+
+      .hero {
+        text-align: center;
+        padding: 48px 0 32px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+        margin: 0 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .hero p {
+        margin: 0;
+        color: var(--slate-500);
+      }
+
+      .verify-panel {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 26px;
+      }
+
+      .verify-panel label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--slate-700);
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .verify-row {
+        display: flex;
+        gap: 12px;
+      }
+
+      .verify-row input {
+        flex: 1;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--slate-200);
+        font-size: 14px;
+      }
+
+      .verify-row button {
+        border: none;
+        background: var(--blue-600);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .verify-row button:hover {
+        background: var(--blue-700);
+      }
+
+      .sample-list {
+        margin-top: 14px;
+        font-size: 13px;
+        color: var(--slate-500);
+      }
+
+      .sample-list span {
+        display: inline-block;
+        margin-right: 12px;
+        color: var(--blue-600);
+        cursor: pointer;
+      }
+
+      .result-card {
+        border-radius: 18px;
+        padding: 24px;
+        border: 2px solid var(--slate-200);
+        background: #fff;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 36px;
+      }
+
+      .result-card.success {
+        border-color: var(--green-200);
+        background: var(--green-50);
+      }
+
+      .result-card.error {
+        border-color: #fecaca;
+        background: #fff5f5;
+      }
+
+      .result-status {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+
+      .result-status .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        margin-bottom: 8px;
+        background: #fff;
+        border: 2px solid currentColor;
+        font-size: 22px;
+      }
+
+      .ticket-info {
+        background: #fff;
+        border-radius: 14px;
+        padding: 18px;
+        border: 1px solid var(--slate-200);
+      }
+
+      .ticket-info h3 {
+        margin: 0 0 12px;
+        font-size: 16px;
+      }
+
+      .ticket-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+        font-size: 13px;
+        color: var(--slate-700);
+      }
+
+      .member-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--amber-50);
+        color: var(--amber-500);
+        font-weight: 600;
+        font-size: 11px;
+        margin-left: 10px;
+      }
+
+      .notice {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: var(--blue-50);
+        color: var(--slate-700);
+        font-size: 13px;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .step-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 18px;
+        border: 1px solid var(--slate-200);
+        text-align: center;
+      }
+
+      .step-card .step-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin: 0 auto 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--blue-50);
+        color: var(--blue-600);
+        font-weight: 600;
+      }
+
+      .benefits {
+        background: #fff;
+        border-radius: 14px;
+        padding: 18px;
+        border: 1px solid var(--slate-200);
+      }
+
+      .benefits ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--slate-700);
+      }
+
+      .benefits li {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 720px) {
+        .verify-row {
+          flex-direction: column;
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'verification', walletButtonId: 'navWalletButton' }) %>
+
+    <main class="container">
+      <section class="hero">
+        <h1>🛡️ Event Entry Verification</h1>
+        <p>Verify NFT ticket ownership on-chain for secure event entry.</p>
+      </section>
+
+      <section class="verify-panel">
+        <label for="qrInput">Enter NFT Token ID or Scan QR Code</label>
+        <form id="verifyForm" class="verify-row">
+          <input id="qrInput" name="qrInput" placeholder="QR-LLC-0156" autocomplete="off" />
+          <button type="submit">Verify</button>
+        </form>
+        <div class="sample-list" id="sampleList">
+          Try these sample codes:
+        </div>
+      </section>
+
+      <section class="result-card" id="resultCard" style="display:none;">
+        <div class="result-status" id="resultStatus"></div>
+        <div class="ticket-info" id="ticketInfo"></div>
+      </section>
+
+      <section class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <strong>Scan QR Code</strong>
+          <p>Attendees present their ticket code at entry.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <strong>Verify On-Chain</strong>
+          <p>Smart contracts confirm NFT ownership instantly.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <strong>Grant Entry</strong>
+          <p>Only valid tickets receive authorization.</p>
+        </div>
+      </section>
+
+      <section class="benefits">
+        <h3>Verification Benefits</h3>
+        <ul>
+          <li>✅ Instant verification with no manual checks</li>
+          <li>✅ Fraud prevention through on-chain ownership</li>
+          <li>✅ Real-time blockchain confirmation</li>
+        </ul>
+      </section>
+      <br>
+      
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script>
+      const STORAGE_KEY = "chainevent_wallet";
+      const navWalletButton = document.getElementById("navWalletButton");
+      let connectedAccount = localStorage.getItem(STORAGE_KEY);
+      let contractConfig = null;
+
+      const fetchContractConfig = async () => {
+        if (contractConfig) return contractConfig;
+        const response = await fetch("/api/contract-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load contract config");
+        }
+        contractConfig = await response.json();
+        return contractConfig;
+      };
+
+      const getContract = async () => {
+        if (!window.Web3) {
+          throw new Error("Web3 not available");
+        }
+        const config = await fetchContractConfig();
+        if (!config || !config.address || !config.abi) {
+          throw new Error("Contract not configured");
+        }
+        const web3 = new window.Web3(window.ethereum);
+        return new web3.eth.Contract(config.abi, config.address);
+      };
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const buildQrCode = (event) => {
+        const name = (event?.name || "").trim();
+        const initials = name
+          .split(/\s+/)
+          .filter(Boolean)
+          .map((part) => part[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 3);
+        const prefix = initials || "EVT";
+        const raw = event?.onChainId ?? event?.id ?? "";
+        const suffix = String(raw).replace(/[^0-9]/g, "").slice(-4).padStart(4, "0");
+        return `QR-${prefix}-${suffix}`;
+      };
+
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        if (Number.isNaN(date.getTime())) return dateString;
+        return date.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        });
+      };
+
+      const syncAccount = async () => {
+        if (!window.ethereum) return connectedAccount;
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
+        connectedAccount = accounts[0] || null;
+        if (connectedAccount) {
+          localStorage.setItem(STORAGE_KEY, connectedAccount);
+        } else {
+          localStorage.removeItem(STORAGE_KEY);
+        }
+        updateNavButton();
+        return connectedAccount;
+      };
+
+      const updateNavButton = () => {
+        if (!navWalletButton) return;
+        setWalletLabel(
+          navWalletButton,
+          connectedAccount ? `Disconnect ${shortenAddress(connectedAccount)}` : "Connect Wallet"
+        );
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask.");
+          return null;
+        }
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return null;
+            }
+          }
+        } catch (error) {
+          console.error("Wallet permission request failed:", error);
+        }
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        connectedAccount = accounts[0] || null;
+        if (connectedAccount) {
+          localStorage.setItem(STORAGE_KEY, connectedAccount);
+        }
+        updateNavButton();
+        return connectedAccount;
+      };
+
+      if (navWalletButton) {
+        navWalletButton.addEventListener("click", async () => {
+          if (connectedAccount) {
+            connectedAccount = null;
+            localStorage.removeItem(STORAGE_KEY);
+            updateNavButton();
+            return;
+          }
+          await connectWallet();
+        });
+      }
+
+      const showResult = (status, content, summary, notice) => {
+        const card = document.getElementById("resultCard");
+        const statusEl = document.getElementById("resultStatus");
+        const infoEl = document.getElementById("ticketInfo");
+        if (!card || !statusEl || !infoEl) return;
+        card.classList.remove("success", "error");
+        card.style.display = "block";
+        card.classList.add(status);
+        statusEl.innerHTML = summary;
+        infoEl.innerHTML = `${content}${notice ? `<div class="notice">${notice}</div>` : ""}`;
+      };
+
+      const verifyCode = async (code) => {
+        const normalized = (code || "").trim().toUpperCase();
+        if (!normalized) {
+          showResult(
+            "error",
+            "<strong>Missing code.</strong> Enter a QR code to continue.",
+            '<div class="badge">!</div><h3>Code Required</h3>'
+          );
+          return;
+        }
+
+        await syncAccount();
+        if (!connectedAccount) {
+          showResult(
+            "error",
+            "<strong>Wallet not connected.</strong> Connect the ticket holder's wallet to verify.",
+            '<div class="badge">!</div><h3>Connect Wallet</h3>'
+          );
+          return;
+        }
+
+        const response = await fetch("/data/events.json");
+        const events = await response.json();
+        const event = events.find((item) => buildQrCode(item) === normalized);
+        if (!event || !event.onChainId) {
+          showResult(
+            "error",
+            "<strong>Ticket not found.</strong> The QR code does not match any event.",
+            '<div class="badge">✕</div><h3>Invalid Ticket</h3>'
+          );
+          return;
+        }
+
+        const contract = await getContract();
+        const isOwner = await contract.methods
+          .hasTicket(event.onChainId, connectedAccount)
+          .call();
+        if (!isOwner) {
+          showResult(
+            "error",
+            `<strong>Ownership not found.</strong> ${shortenAddress(
+              connectedAccount
+            )} does not own this ticket.`,
+            '<div class="badge">✕</div><h3>Entry Not Authorized</h3>'
+          );
+          return;
+        }
+
+        const eventDate = formatDate(event.date);
+        const tokenId = `NFT-${event.onChainId}`;
+        const content = `
+          <h3>Ticket Information <span class="member-tag">NFT Ticket</span></h3>
+          <div class="ticket-grid">
+            <div><strong>Event Name</strong><br/>${event.name || "Event Ticket"}</div>
+            <div><strong>Event Date</strong><br/>${eventDate}</div>
+            <div><strong>Token ID</strong><br/>${tokenId}</div>
+            <div><strong>Owner Address</strong><br/>${shortenAddress(connectedAccount)}</div>
+            <div><strong>Location</strong><br/>${event.location || "TBA"}</div>
+          </div>
+        `;
+        showResult(
+          "success",
+          content,
+          '<div class="badge">✓</div><h3>Entry Authorized</h3><p>Valid NFT Ticket - Entry Authorized</p>',
+          "Verified on blockchain — ownership confirmed via smart contract."
+        );
+      };
+
+      document.getElementById("verifyForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const code = document.getElementById("qrInput").value;
+        verifyCode(code);
+      });
+
+      const seedSampleCodes = async () => {
+        const sampleList = document.getElementById("sampleList");
+        if (!sampleList) return;
+        try {
+          const response = await fetch("/data/events.json");
+          const events = await response.json();
+          const samples = events.filter((item) => item && item.onChainId).slice(0, 2);
+          if (!samples.length) {
+            sampleList.innerHTML = "Try these sample codes:";
+            return;
+          }
+          sampleList.innerHTML = "Try these sample codes: ";
+          samples.forEach((item) => {
+            const code = buildQrCode(item);
+            const span = document.createElement("span");
+            span.textContent = code;
+            span.setAttribute("data-code", code);
+            sampleList.appendChild(span);
+          });
+        } catch (error) {
+          sampleList.innerHTML = "Try these sample codes:";
+        }
+      };
+
+      document.getElementById("sampleList").addEventListener("click", (event) => {
+        const code = event.target.getAttribute("data-code");
+        if (!code) return;
+        document.getElementById("qrInput").value = code;
+        verifyCode(code);
+      });
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", () => {
+          syncAccount();
+        });
+      }
+
+      updateNavButton();
+      syncAccount();
+      seedSampleCodes();
+    </script>
+  </body>
+</html>

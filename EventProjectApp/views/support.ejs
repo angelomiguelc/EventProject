@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - Support</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --line: #e5e7eb;
+        --hero-1: #3d4bff;
+        --hero-2: #7b3df1;
+        --hero-3: #9a36d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+        border: none;
+        cursor: pointer;
+      }
+
+      .hero {
+        background: linear-gradient(130deg, var(--hero-1), var(--hero-2), var(--hero-3));
+        color: #ffffff;
+        padding: 70px 0 90px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: clamp(28px, 4vw, 44px);
+      }
+
+      .hero p {
+        margin: 0 auto;
+        max-width: 650px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+      }
+
+      .section {
+        padding: 60px 0;
+      }
+
+      .section h2 {
+        text-align: center;
+        margin: 0 0 10px;
+        font-size: clamp(22px, 3vw, 30px);
+      }
+
+      .section .lead {
+        text-align: center;
+        margin: 0 auto 32px;
+        max-width: 620px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .support-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .support-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        display: grid;
+        gap: 10px;
+      }
+
+      .support-card strong {
+        font-size: 15px;
+      }
+
+      .support-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .faq {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .faq-item {
+        display: grid;
+        gap: 6px;
+      }
+
+      .faq-item strong {
+        font-size: 14px;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 960px) {
+        .support-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          row-gap: 10px;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .support-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'support', walletButtonId: 'navWalletButton' }) %>
+
+    <section class="hero">
+      <div class="container">
+        <h1>Support Center</h1>
+        <p>Need help with tickets, memberships, or wallet access? We’re here to help.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>Get Help Fast</h2>
+        <p class="lead">Choose the support channel that matches your issue and we’ll guide you through the solution.</p>
+        <div class="support-grid">
+          <div class="support-card">
+            <strong>Wallet Connection</strong>
+            <p>Fix connection issues, network mismatches, or MetaMask errors.</p>
+          </div>
+          <div class="support-card">
+            <strong>Ticket Purchases</strong>
+            <p>Questions about payments, confirmations, and ticket delivery.</p>
+          </div>
+          <div class="support-card">
+            <strong>Membership Perks</strong>
+            <p>Learn how your Bronze, Silver, or Gold perks unlock.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:#ffffff;">
+      <div class="container">
+        <h2>Common Questions</h2>
+        <p class="lead">Quick answers to the most common support requests.</p>
+        <div class="faq">
+          <div class="faq-item">
+            <strong>Why is my wallet showing disconnected?</strong>
+            <p>Ensure MetaMask is unlocked, on the correct network, and refresh the page.</p>
+          </div>
+          <div class="faq-item">
+            <strong>How do I see my purchased ticket?</strong>
+            <p>Connect the same wallet you used for purchase, then open My Tickets.</p>
+          </div>
+          <div class="faq-item">
+            <strong>Why didn’t my transaction go through?</strong>
+            <p>Confirm you have enough ETH for gas and that you didn’t reject the MetaMask prompt.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+    <script>
+      const walletButton = document.getElementById("navWalletButton");
+      const STORAGE_KEY = "chainevent_wallet";
+      let connectedAccount = localStorage.getItem(STORAGE_KEY);
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const setButtonState = () => {
+        if (!walletButton) return;
+        setWalletLabel(
+          walletButton,
+          connectedAccount ? `Disconnect ${shortenAddress(connectedAccount)}` : "Connect Wallet"
+        );
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        setButtonState();
+        if (window.updateAdminLink) {
+          window.updateAdminLink();
+        }
+      };
+
+      const syncWallet = async () => {
+        if (!window.ethereum) return;
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+      };
+
+      if (walletButton) {
+        walletButton.addEventListener("click", () => {
+          if (connectedAccount) {
+            disconnectWallet();
+          } else {
+            connectWallet();
+          }
+        });
+      }
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        });
+      }
+
+      setButtonState();
+      if (window.updateAdminLink) {
+        window.updateAdminLink();
+      }
+      syncWallet();
+    </script>
+  </body>
+</html>

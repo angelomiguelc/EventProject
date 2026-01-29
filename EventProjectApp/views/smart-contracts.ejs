@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - Smart Contracts</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --line: #e5e7eb;
+        --hero-1: #3d4bff;
+        --hero-2: #7b3df1;
+        --hero-3: #9a36d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+        border: none;
+        cursor: pointer;
+      }
+
+      .hero {
+        background: linear-gradient(130deg, var(--hero-1), var(--hero-2), var(--hero-3));
+        color: #ffffff;
+        padding: 70px 0 90px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: clamp(28px, 4vw, 44px);
+      }
+
+      .hero p {
+        margin: 0 auto;
+        max-width: 650px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+      }
+
+      .section {
+        padding: 60px 0;
+      }
+
+      .section h2 {
+        text-align: center;
+        margin: 0 0 10px;
+        font-size: clamp(22px, 3vw, 30px);
+      }
+
+      .section .lead {
+        text-align: center;
+        margin: 0 auto 32px;
+        max-width: 620px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .contract-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .contract-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        display: grid;
+        gap: 10px;
+      }
+
+      .contract-card strong {
+        font-size: 15px;
+      }
+
+      .contract-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .highlight {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .highlight ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .highlight li {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 960px) {
+        .contract-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .highlight {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          row-gap: 10px;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .contract-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'smart-contracts', walletButtonId: 'navWalletButton' }) %>
+
+    <section class="hero">
+      <div class="container">
+        <h1>Smart Contracts</h1>
+        <p>ChainEvent uses on-chain contracts to mint tickets, verify ownership, and manage memberships with transparent rules.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>Core Contracts</h2>
+        <p class="lead">The platform is powered by a small set of audited contracts that keep tickets and memberships secure.</p>
+        <div class="contract-grid">
+          <div class="contract-card">
+            <span class="badge">Ticketing</span>
+            <strong>Events.sol</strong>
+            <p>Creates events, mints tickets, tracks available supply, and forwards revenue after each purchase.</p>
+          </div>
+          <div class="contract-card">
+            <span class="badge">Membership</span>
+            <strong>Membership.sol</strong>
+            <p>Mints Bronze, Silver, and Gold memberships with upgrade-only rules for secure tier progression.</p>
+          </div>
+          <div class="contract-card">
+            <span class="badge">Verification</span>
+            <strong>Ownership Checks</strong>
+            <p>Verifies ticket ownership on-chain for instant entry validation through the verification page.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:#ffffff;">
+      <div class="container">
+        <div class="highlight">
+          <div>
+            <h2>Why on-chain?</h2>
+            <p class="lead" style="text-align:left;margin:0 0 14px;">Every transaction is immutable, transparent, and tied to the ticket holder’s wallet.</p>
+            <ul>
+              <li>✅ No counterfeit tickets or double sales</li>
+              <li>✅ Automatic revenue settlement to organizers</li>
+              <li>✅ Real-time proof of ownership for entry</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Contract Transparency</h3>
+            <p class="lead" style="text-align:left;margin:0;">Anyone can inspect deployed contract addresses and transaction history on your chain explorer.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+    <script>
+      const walletButton = document.getElementById("navWalletButton");
+      const STORAGE_KEY = "chainevent_wallet";
+      let connectedAccount = localStorage.getItem(STORAGE_KEY);
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const setButtonState = () => {
+        if (!walletButton) return;
+        setWalletLabel(
+          walletButton,
+          connectedAccount ? `Disconnect ${shortenAddress(connectedAccount)}` : "Connect Wallet"
+        );
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        setButtonState();
+        if (window.updateAdminLink) {
+          window.updateAdminLink();
+        }
+      };
+
+      const syncWallet = async () => {
+        if (!window.ethereum) return;
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+      };
+
+      if (walletButton) {
+        walletButton.addEventListener("click", () => {
+          if (connectedAccount) {
+            disconnectWallet();
+          } else {
+            connectWallet();
+          }
+        });
+      }
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        });
+      }
+
+      setButtonState();
+      if (window.updateAdminLink) {
+        window.updateAdminLink();
+      }
+      syncWallet();
+    </script>
+  </body>
+</html>

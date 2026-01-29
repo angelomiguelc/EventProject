@@ -1,0 +1,55 @@
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="/events">
+      <span class="brand-mark">CE</span>
+      <span>ChainEvent</span>
+    </a>
+    <nav class="nav-links">
+      <a class="<%= activePage === 'events' ? 'active' : '' %>" href="/events">Events</a>
+      <a class="<%= activePage === 'membership' ? 'active' : '' %>" href="/membership">Membership</a>
+      <a class="<%= activePage === 'mytickets' ? 'active' : '' %>" href="/mytickets">My Tickets</a>
+      <a class="<%= activePage === 'verification' ? 'active' : '' %>" href="/verification">Verification</a>
+      <a class="<%= activePage === 'dashboard' ? 'active' : '' %> admin-link" data-admin-link href="/dashboard" style="display:none;">
+        Dashboard
+      </a>
+      <a class="<%= activePage === 'about-us' ? 'active' : '' %>" href="/about-us">About Us</a>
+    </nav>
+    <button class="btn" id="<%= typeof walletButtonId !== 'undefined' ? walletButtonId : 'walletButton' %>" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path>
+        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path>
+      </svg>
+      <span class="wallet-label">Connect Wallet</span>
+    </button>
+  </div>
+</header>
+<script>
+  (function () {
+    const ADMIN_WALLET = "<%= (adminWallet || '') %>".toLowerCase();
+    const ADMIN_LINK_SELECTOR = "[data-admin-link]";
+    const STORAGE_KEY = "chainevent_wallet";
+
+    const updateAdminLink = () => {
+      const link = document.querySelector(ADMIN_LINK_SELECTOR);
+      if (!link) return;
+      const stored = (localStorage.getItem(STORAGE_KEY) || "").toLowerCase();
+      if (stored && stored === ADMIN_WALLET) {
+        link.style.display = "inline-flex";
+        document.cookie = `adminWallet=${stored}; path=/`;
+      } else {
+        link.style.display = "none";
+        document.cookie = "adminWallet=; Max-Age=0; path=/";
+      }
+    };
+
+    window.updateAdminLink = updateAdminLink;
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", updateAdminLink);
+    } else {
+      updateAdminLink();
+    }
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", updateAdminLink);
+    }
+  })();
+</script>

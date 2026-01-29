@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - Add Event</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --hero-1: #3d4bff;
+        --hero-2: #7b3df1;
+        --hero-3: #9a36d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(960px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-light {
+        background: #e8eeff;
+        color: #1f49e2;
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .hero {
+        background: linear-gradient(130deg, var(--hero-1), var(--hero-2), var(--hero-3));
+        color: #ffffff;
+        padding: 52px 0 90px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: clamp(30px, 4vw, 42px);
+      }
+
+      .hero p {
+        margin: 0 auto;
+        max-width: 560px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .form-wrap {
+        margin-top: -60px;
+        padding-bottom: 70px;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+      }
+
+      .card h2 {
+        margin: 0 0 18px;
+        font-size: 20px;
+      }
+
+      .notice {
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        color: #9f1239;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        margin-bottom: 16px;
+      }
+
+      .stat-card {
+        background: #f4f7ff;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #1f2a52;
+        margin-bottom: 18px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .field label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin: 0;
+        line-height: 1.2;
+        display: block;
+      }
+
+      .field input,
+      .field textarea,
+      .field select {
+        border: 1px solid #e3e6ef;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 14px;
+        font-family: inherit;
+        line-height: 1.2;
+        height: 44px;
+      }
+
+      .field textarea {
+        resize: vertical;
+        min-height: 120px;
+        height: auto;
+      }
+
+      .field-wide {
+        grid-column: 1 / -1;
+      }
+
+      .media {
+        border: 1px dashed #d4d8e4;
+        border-radius: 16px;
+        padding: 14px;
+        background: #f9fafc;
+        min-height: 180px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: #94a3b8;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .media-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      .media-name {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 720px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'events' }) %>
+
+    <section class="hero">
+      <div class="container">
+        <h1>Add a New Event</h1>
+        <p>Create a blockchain-verified event listing with tickets and details.</p>
+      </div>
+    </section>
+
+    <section class="form-wrap">
+      <div class="container">
+        <div class="card">
+          <h2>Event Details</h2>
+          <% if (typeof error !== "undefined" && error) { %>
+            <div class="notice"><%= error %></div>
+          <% } %>
+          <div class="stat-card">
+            <span>Live ETH Price (USD)</span>
+            <strong id="ethPrice">Loading...</strong>
+          </div>
+          <form id="eventForm" action="/events/new" method="post" enctype="multipart/form-data">
+            <input id="walletAddress" name="walletAddress" type="hidden" />
+            <input id="txHash" name="txHash" type="hidden" />
+            <input id="onChainId" name="onChainId" type="hidden" />
+            <div class="form-grid">
+              <div class="field">
+                <label for="eventId">Event ID</label>
+                <input
+                  id="eventId"
+                  name="eventId"
+                  type="text"
+                  placeholder="EVT-2025-001"
+                  value="<%= event && event.id ? event.id : '' %>"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="name">Event Name</label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Electric Summer Festival"
+                  value="<%= event && event.name ? event.name : '' %>"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="date">Event Date</label>
+                <input id="date" name="date" type="date" value="<%= event && event.date ? event.date : '' %>" required />
+              </div>
+              <div class="field">
+                <label for="location">Location</label>
+                <input
+                  id="location"
+                  name="location"
+                  type="text"
+                  placeholder="Central Park, New York"
+                  value="<%= event && event.location ? event.location : '' %>"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                  <% const selectedCategory = event && event.category ? event.category : ''; %>
+                  <option value="" disabled <%= selectedCategory ? '' : 'selected' %>>Select category</option>
+                  <option value="Music Festival" <%= selectedCategory === 'Music Festival' ? 'selected' : '' %>>
+                    Music Festival
+                  </option>
+                  <option value="Conference" <%= selectedCategory === 'Conference' ? 'selected' : '' %>>
+                    Conference
+                  </option>
+                  <option value="Concert" <%= selectedCategory === 'Concert' ? 'selected' : '' %>>
+                    Concert
+                  </option>
+                  <option value="Sports" <%= selectedCategory === 'Sports' ? 'selected' : '' %>>
+                    Sports
+                  </option>
+                  <option value="Art &amp; Culture" <%= selectedCategory === 'Art & Culture' ? 'selected' : '' %>>
+                    Art &amp; Culture
+                  </option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="price">Event Price (ETH)</label>
+                <input
+                  id="price"
+                  name="price"
+                  type="number"
+                  min="0"
+                  step="0.0001"
+                  placeholder="0.05"
+                  value="<%= event && typeof event.price !== 'undefined' ? event.price : '' %>"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="tickets">Tickets Available</label>
+                <input
+                  id="tickets"
+                  name="tickets"
+                  type="number"
+                  min="0"
+                  step="1"
+                  placeholder="1000"
+                  value="<%= event && typeof event.ticketsAvailable !== 'undefined' ? event.ticketsAvailable : '' %>"
+                  required
+                />
+              </div>
+              <div class="field">
+                <label for="about">About This Event</label>
+                <textarea id="about" name="about" placeholder="Share a short description about the event." required><%= event && event.about ? event.about : '' %></textarea>
+              </div>
+              <div class="field field-wide">
+                <label>Event Media</label>
+                <div class="media" id="mediaPreview">Add an image to showcase your event.</div>
+                <div class="media-actions">
+                  <button class="btn btn-light" type="button" id="imageButton">Add Image</button>
+                  <span class="media-name" id="imageName">No file selected</span>
+                </div>
+                <input id="eventImageInput" name="eventImage" type="file" accept="image/*" hidden />
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn" id="submitButton" type="submit">Create Event</button>
+              <a class="btn btn-light" href="/events">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script>
+      const EXPECTED_CHAIN_ID = "0x539";
+      const STORAGE_KEY = "chainevent_wallet";
+      const ADMIN_WALLET = "<%= (adminWallet || '') %>".toLowerCase();
+      const walletButton = document.getElementById("walletButton");
+      const walletAddressInput = document.getElementById("walletAddress");
+      const txHashInput = document.getElementById("txHash");
+      const onChainIdInput = document.getElementById("onChainId");
+      const eventForm = document.getElementById("eventForm");
+      const submitButton = document.getElementById("submitButton");
+      const ethPrice = document.getElementById("ethPrice");
+      const imageButton = document.getElementById("imageButton");
+      const imageInput = document.getElementById("eventImageInput");
+      const imageName = document.getElementById("imageName");
+      const mediaPreview = document.getElementById("mediaPreview");
+      let connectedAccount = null;
+      let imageObjectUrl = null;
+      let isSubmitting = false;
+      let contractConfig = null;
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setButtonState = () => {
+        if (connectedAccount) {
+          setWalletLabel(walletButton, `Disconnect ${shortenAddress(connectedAccount)}`);
+        } else {
+          setWalletLabel(walletButton, "Connect Wallet");
+        }
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const isAdmin = () =>
+        Boolean(connectedAccount) && connectedAccount.toLowerCase() === ADMIN_WALLET;
+
+      const setFormState = () => {
+        const canSubmit = isAdmin();
+        walletAddressInput.value = canSubmit ? connectedAccount : "";
+        submitButton.disabled = !canSubmit;
+        eventForm.querySelectorAll("input, textarea").forEach((field) => {
+          if (field.id === "walletAddress") return;
+          if (field.id === "txHash") return;
+          if (field.id === "eventImageInput") return;
+          field.disabled = !canSubmit;
+        });
+        imageButton.disabled = false;
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          setFormState();
+          if (connectedAccount && !isAdmin()) {
+            alert("This wallet does not have permission to create events.");
+          }
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        setButtonState();
+        setFormState();
+      };
+
+      const fetchEthPrice = async () => {
+        try {
+          const response = await fetch("/api/eth-price", { cache: "no-store" });
+          const data = await response.json();
+          const price = data && data.usd ? data.usd : null;
+          if (!price) throw new Error("Missing price");
+          ethPrice.textContent = `$${Number(price).toLocaleString()}`;
+        } catch (error) {
+          console.error("Failed to load ETH price:", error);
+          ethPrice.textContent = "Unavailable";
+        }
+      };
+
+      const resetImagePreview = () => {
+        if (imageObjectUrl) {
+          URL.revokeObjectURL(imageObjectUrl);
+          imageObjectUrl = null;
+        }
+        mediaPreview.textContent = "Add an image to showcase your event.";
+        imageName.textContent = "No file selected";
+      };
+
+      imageButton.addEventListener("click", () => {
+        imageInput.click();
+      });
+
+      imageInput.addEventListener("change", () => {
+        const file = imageInput.files[0];
+        if (!file) {
+          resetImagePreview();
+          return;
+        }
+        if (imageObjectUrl) {
+          URL.revokeObjectURL(imageObjectUrl);
+        }
+        imageObjectUrl = URL.createObjectURL(file);
+        mediaPreview.innerHTML = `<img src="${imageObjectUrl}" alt="Event media preview">`;
+        imageName.textContent = file.name;
+      });
+
+      const fetchContractConfig = async () => {
+        if (contractConfig) return contractConfig;
+        const response = await fetch("/api/contract-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load contract config");
+        }
+        contractConfig = await response.json();
+        return contractConfig;
+      };
+
+      const submitOnChain = async () => {
+        if (!window.ethereum || !window.Web3) {
+          alert("MetaMask or Web3 is not available. Please install MetaMask.");
+          return null;
+        }
+        const config = await fetchContractConfig();
+        if (!config || !config.address || !config.abi) {
+          alert("Contract not configured. Deploy the Events contract first.");
+          return null;
+        }
+
+        const chainId = await window.ethereum.request({ method: "eth_chainId" });
+        if (chainId !== EXPECTED_CHAIN_ID) {
+          alert("Please switch MetaMask to Localhost 8545 (chain id 1337).");
+          return null;
+        }
+
+        const web3 = new window.Web3(window.ethereum);
+        const contract = new web3.eth.Contract(config.abi, config.address);
+        const name = document.getElementById("name").value.trim();
+        const date = document.getElementById("date").value;
+        const location = document.getElementById("location").value.trim();
+        const priceEth = document.getElementById("price").value || "0";
+        const priceWei = web3.utils.toWei(priceEth, "ether");
+        const tickets = document.getElementById("tickets").value || "0";
+        const about = document.getElementById("about").value.trim();
+
+        return contract.methods
+          .createEvent(name, date, location, priceWei, tickets, about)
+          .send({ from: connectedAccount });
+      };
+
+      eventForm.addEventListener("submit", async (event) => {
+        if (!connectedAccount) {
+          event.preventDefault();
+          alert("Please connect your wallet before creating an event.");
+          return;
+        }
+        if (!isAdmin()) {
+          event.preventDefault();
+          alert("Only the admin wallet can create events.");
+          return;
+        }
+        if (isSubmitting) {
+          event.preventDefault();
+          return;
+        }
+        event.preventDefault();
+        isSubmitting = true;
+        submitButton.disabled = true;
+        submitButton.textContent = "Waiting for MetaMask...";
+
+        try {
+          const receipt = await submitOnChain();
+          if (!receipt) {
+            submitButton.disabled = false;
+            submitButton.textContent = "Create Event";
+            isSubmitting = false;
+            return;
+          }
+          txHashInput.value = receipt.transactionHash || "";
+          const chainEvent =
+            receipt &&
+            receipt.events &&
+            receipt.events.EventCreated &&
+            receipt.events.EventCreated.returnValues
+              ? receipt.events.EventCreated.returnValues
+              : null;
+          onChainIdInput.value = chainEvent && chainEvent.id ? chainEvent.id : "";
+          eventForm.submit();
+        } catch (error) {
+          console.error("Transaction failed:", error);
+          alert("Transaction was cancelled or failed.");
+          submitButton.disabled = false;
+          submitButton.textContent = "Create Event";
+          isSubmitting = false;
+        }
+      });
+
+      walletButton.addEventListener("click", () => {
+        if (connectedAccount) {
+          disconnectWallet();
+        } else {
+          connectWallet();
+        }
+      });
+
+      const syncWallet = async () => {
+        if (!window.ethereum) return;
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          setFormState();
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+      };
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          setFormState();
+        });
+      }
+
+      connectedAccount = localStorage.getItem(STORAGE_KEY);
+      setButtonState();
+      setFormState();
+      syncWallet();
+      fetchEthPrice();
+    </script>
+  </body>
+</html>

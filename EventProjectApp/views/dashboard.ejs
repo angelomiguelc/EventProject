@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - Dashboard</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --line: #e5e7eb;
+        --chip: #eef2ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+        border: none;
+        cursor: pointer;
+      }
+
+      .page-header {
+        padding: 36px 0 24px;
+      }
+
+      .page-title {
+        font-size: 26px;
+        margin: 0 0 6px;
+      }
+
+      .page-sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .stats-grid.secondary {
+        margin-top: 18px;
+      }
+
+      .stat-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        display: grid;
+        gap: 10px;
+        min-height: 120px;
+      }
+
+      .stat-card .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+      }
+
+      .stat-card .stat-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--chip);
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 11px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .panel-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 18px;
+        margin-top: 24px;
+      }
+
+      .panel {
+        background: var(--card);
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        padding: 18px;
+      }
+
+      .panel h3 {
+        margin: 0 0 14px;
+        font-size: 16px;
+      }
+
+      .event-row {
+        display: grid;
+        gap: 6px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .event-row:last-child {
+        border-bottom: none;
+      }
+
+      .event-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .event-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .progress {
+        height: 8px;
+        border-radius: 999px;
+        background: #e5e7eb;
+        overflow: hidden;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        background: var(--primary);
+      }
+
+      .activity-item {
+        display: grid;
+        grid-template-columns: 28px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+      }
+
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+
+      .activity-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: #eef2ff;
+        color: var(--primary);
+        font-size: 14px;
+      }
+
+      .activity-meta {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 960px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .panel-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          row-gap: 10px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'dashboard', walletButtonId: 'navWalletButton' }) %>
+
+    <main class="container">
+      <section class="page-header">
+        <h1 class="page-title">Event Organizer Dashboard</h1>
+        <p class="page-sub">Monitor NFT ticket minting, verifications, and blockchain activity.</p>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#e0e7ff;color:#1d4ed8;">📅</div>
+          <div class="stat-meta">
+            <span>Total Events</span>
+            <span class="pill">Active</span>
+          </div>
+          <div class="stat-value" id="statTotalEvents">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#ede9fe;color:#7c3aed;">🎟️</div>
+          <div class="stat-meta">
+            <span>Tickets Minted</span>
+            <span class="pill" style="background:#dcfce7;color:#16a34a;">+12%</span>
+          </div>
+          <div class="stat-value" id="statTicketsMinted">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7;color:#d97706;">💰</div>
+          <div class="stat-meta">
+            <span>Total Revenue</span>
+            <span class="pill" style="background:#dcfce7;color:#16a34a;">+8%</span>
+          </div>
+          <div class="stat-value" id="statRevenue">0 ETH</div>
+        </div>
+      </section>
+
+      <section class="stats-grid secondary">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fde68a;color:#b45309;">🥉</div>
+          <div class="stat-meta">
+            <span>Bronze Members</span>
+            <span class="pill">Tier 1</span>
+          </div>
+          <div class="stat-value" id="statBronzeMembers">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#e5e7eb;color:#475569;">🥈</div>
+          <div class="stat-meta">
+            <span>Silver Members</span>
+            <span class="pill">Tier 2</span>
+          </div>
+          <div class="stat-value" id="statSilverMembers">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fde68a;color:#d97706;">🥇</div>
+          <div class="stat-meta">
+            <span>Gold Members</span>
+            <span class="pill">Tier 3</span>
+          </div>
+          <div class="stat-value" id="statGoldMembers">0</div>
+        </div>
+      </section>
+
+      <section class="panel-grid">
+        <div class="panel">
+          <h3>Events Overview</h3>
+          <div id="eventsOverview"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Recent Blockchain Activity</h3>
+          <div id="activityFeed"></div>
+        </div>
+        <br>
+      </section>
+
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script>
+      const walletButton = document.getElementById("navWalletButton");
+      const STORAGE_KEY = "chainevent_wallet";
+      let connectedAccount = localStorage.getItem(STORAGE_KEY);
+      let contractConfig = null;
+      let membershipConfig = null;
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const setButtonState = () => {
+        if (!walletButton) return;
+        setWalletLabel(
+          walletButton,
+          connectedAccount ? `Disconnect ${shortenAddress(connectedAccount)}` : "Connect Wallet"
+        );
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        setButtonState();
+        if (window.updateAdminLink) {
+          window.updateAdminLink();
+        }
+      };
+
+      const syncWallet = async () => {
+        if (!window.ethereum) return;
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+      };
+
+      if (walletButton) {
+        walletButton.addEventListener("click", () => {
+          if (connectedAccount) {
+            disconnectWallet();
+          } else {
+            connectWallet();
+          }
+        });
+      }
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          if (window.updateAdminLink) {
+            window.updateAdminLink();
+          }
+        });
+      }
+
+      const fetchContractConfig = async () => {
+        if (contractConfig) return contractConfig;
+        const response = await fetch("/api/contract-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load contract config");
+        }
+        contractConfig = await response.json();
+        return contractConfig;
+      };
+
+      const fetchMembershipConfig = async () => {
+        if (membershipConfig) return membershipConfig;
+        const response = await fetch("/api/membership-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load membership config");
+        }
+        membershipConfig = await response.json();
+        return membershipConfig;
+      };
+
+      const getContract = async () => {
+        if (!window.Web3) {
+          throw new Error("Web3 not available");
+        }
+        const config = await fetchContractConfig();
+        if (!config || !config.address || !config.abi) {
+          throw new Error("Contract not configured");
+        }
+        const web3 = new window.Web3(window.ethereum);
+        return new web3.eth.Contract(config.abi, config.address);
+      };
+
+      const getMembershipContract = async () => {
+        if (!window.Web3) {
+          throw new Error("Web3 not available");
+        }
+        const config = await fetchMembershipConfig();
+        if (!config || !config.address || !config.abi) {
+          throw new Error("Membership contract not configured");
+        }
+        const web3 = new window.Web3(window.ethereum);
+        return new web3.eth.Contract(config.abi, config.address);
+      };
+
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        if (Number.isNaN(date.getTime())) return dateString;
+        return date.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        });
+      };
+
+      const formatEth = (value) => {
+        const num = Number(value || 0);
+        return `${num.toFixed(2)} ETH`;
+      };
+
+      const renderEventsOverview = (items) => {
+        const container = document.getElementById("eventsOverview");
+        if (!container) return;
+        if (!items.length) {
+          container.innerHTML = "<div class=\"activity-meta\">No events yet.</div>";
+          return;
+        }
+        container.innerHTML = items
+          .map((event) => {
+            const total = Number(event.totalTickets || 0);
+            const remaining = Number(event.remainingTickets || 0);
+            const sold = Math.max(total - remaining, 0);
+            const percent = total ? Math.round((sold / total) * 100) : 0;
+            return `
+              <div class="event-row">
+                <div class="event-title">
+                  <span>${event.name || "Event"}</span>
+                  <span class="pill">${event.category || "Event"}</span>
+                </div>
+                <div class="event-meta">
+                  <span>${formatDate(event.date)}</span>
+                  <span>${percent}%</span>
+                </div>
+                <div class="event-meta">
+                  <span>${sold} / ${total} sold</span>
+                </div>
+                <div class="progress"><span style="width:${percent}%;"></span></div>
+              </div>
+            `;
+          })
+          .join("");
+      };
+
+      const renderActivity = (items) => {
+        const container = document.getElementById("activityFeed");
+        if (!container) return;
+        if (!items.length) {
+          container.innerHTML = "<div class=\"activity-meta\">No blockchain activity yet.</div>";
+          return;
+        }
+        container.innerHTML = items
+          .map((item) => {
+            return `
+              <div class="activity-item">
+                <div class="activity-icon">${item.icon}</div>
+                <div>
+                  <div><strong>${item.title}</strong></div>
+                  <div class="activity-meta">${item.subtitle}</div>
+                </div>
+                <span class="pill">${item.count}</span>
+              </div>
+            `;
+          })
+          .join("");
+      };
+
+      const loadDashboardStats = async () => {
+        try {
+          const response = await fetch("/data/events.json", { cache: "no-store" });
+          const events = await response.json();
+          const contract = await getContract();
+          const enriched = await Promise.all(
+            events.map(async (event) => {
+              let remaining = Number(event.ticketsAvailable || 0);
+              if (event.onChainId) {
+                try {
+                  const chainEvent = await contract.methods.getEvent(event.onChainId).call();
+                  remaining = Number(chainEvent.ticketsAvailable || remaining);
+                } catch (error) {
+                  console.warn("Failed to fetch on-chain event", event.onChainId, error);
+                }
+              }
+              return {
+                ...event,
+                totalTickets: Number(event.ticketsAvailable || 0),
+                remainingTickets: remaining,
+              };
+            })
+          );
+
+          const totals = enriched.reduce(
+            (acc, event) => {
+              const total = Number(event.totalTickets || 0);
+              const remaining = Number(event.remainingTickets || 0);
+              const sold = Math.max(total - remaining, 0);
+              acc.tickets += sold;
+              acc.revenue += sold * Number(event.price || 0);
+              return acc;
+            },
+            { tickets: 0, revenue: 0 }
+          );
+
+          const totalEventsEl = document.getElementById("statTotalEvents");
+          const ticketsEl = document.getElementById("statTicketsMinted");
+          const revenueEl = document.getElementById("statRevenue");
+          const bronzeEl = document.getElementById("statBronzeMembers");
+          const silverEl = document.getElementById("statSilverMembers");
+          const goldEl = document.getElementById("statGoldMembers");
+          if (totalEventsEl) totalEventsEl.textContent = enriched.length;
+          if (ticketsEl) ticketsEl.textContent = totals.tickets;
+          if (revenueEl) revenueEl.textContent = formatEth(totals.revenue);
+          if (bronzeEl) bronzeEl.textContent = "0";
+          if (silverEl) silverEl.textContent = "0";
+          if (goldEl) goldEl.textContent = "0";
+
+          renderEventsOverview(enriched);
+
+          const recentActivity = enriched.slice(0, 4).map((event) => ({
+            icon: "🎟️",
+            title: "Ticket Sales",
+            subtitle: `${event.name || "Event"} · ${formatDate(event.date)}`,
+            count: `${Math.max(
+              Number(event.totalTickets || 0) - Number(event.remainingTickets || 0),
+              0
+            )}x`,
+          }));
+          let membershipActivity = [];
+
+          if (bronzeEl || silverEl || goldEl || revenueEl) {
+            try {
+              const membershipContract = await getMembershipContract();
+              const purchaseEvents = await membershipContract.getPastEvents("MembershipPurchased", {
+                fromBlock: 0,
+                toBlock: "latest",
+              });
+              const unique = new Map();
+              let membershipRevenue = 0;
+              purchaseEvents.forEach((evt) => {
+                const buyer = (evt.returnValues?.buyer || "").toLowerCase();
+                const tier = Number(evt.returnValues?.tier || 0);
+                const priceWei = evt.returnValues?.price || "0";
+                if (buyer) {
+                  const current = unique.get(buyer) || 0;
+                  if (tier > current) {
+                    unique.set(buyer, tier);
+                  }
+                }
+                membershipRevenue += Number(window.Web3.utils.fromWei(priceWei, "ether"));
+              });
+              if (bronzeEl || silverEl || goldEl) {
+                let bronzeCount = 0;
+                let silverCount = 0;
+                let goldCount = 0;
+                unique.forEach((tier) => {
+                  if (tier === 1) bronzeCount += 1;
+                  if (tier === 2) silverCount += 1;
+                  if (tier === 3) goldCount += 1;
+                });
+                if (bronzeEl) bronzeEl.textContent = String(bronzeCount);
+                if (silverEl) silverEl.textContent = String(silverCount);
+                if (goldEl) goldEl.textContent = String(goldCount);
+              }
+              if (revenueEl) {
+                revenueEl.textContent = formatEth(totals.revenue + membershipRevenue);
+              }
+              membershipActivity = purchaseEvents
+                .slice(-4)
+                .reverse()
+                .map((evt) => ({
+                  icon: "👑",
+                  title: "Membership Purchased",
+                  subtitle: `Tier ${evt.returnValues?.tier || ""} · ${shortenAddress(
+                    evt.returnValues?.buyer || ""
+                  )}`,
+                  count: "1x",
+                }));
+            } catch (error) {
+              console.warn("Failed to load memberships:", error);
+              if (bronzeEl) bronzeEl.textContent = "0";
+              if (silverEl) silverEl.textContent = "0";
+              if (goldEl) goldEl.textContent = "0";
+            }
+          }
+          renderActivity([...membershipActivity, ...recentActivity].slice(0, 6));
+        } catch (error) {
+          console.error("Failed to load dashboard stats:", error);
+          renderEventsOverview([]);
+          renderActivity([]);
+        }
+      };
+
+      setButtonState();
+      if (window.updateAdminLink) {
+        window.updateAdminLink();
+      }
+      syncWallet();
+      if (window.location.search) {
+        window.history.replaceState({}, "", "/dashboard");
+      }
+      loadDashboardStats();
+    </script>
+  </body>
+</html>

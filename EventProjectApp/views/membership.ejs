@@ -1,96 +1,810 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>Membership</title>
-	<style>
-		body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:24px;background:#f7f7f9}
-		.container{max-width:860px;margin:0 auto;background:#fff;padding:24px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-		h1{margin-top:0}
-		form .row{display:flex;gap:12px}
-		label{display:block;font-size:13px;margin-bottom:6px}
-		input[type=text],input[type=email],select{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
-		.left{flex:2}.right{flex:1}
-		.preview{border:1px dashed #ddd;padding:12px;border-radius:6px;text-align:center}
-		.preview img{max-width:100%;height:auto;border-radius:6px}
-		.btn{display:inline-block;padding:10px 16px;border-radius:6px;background:#0b75ef;color:#fff;border:none;cursor:pointer}
-		.success{margin-top:16px;padding:12px;background:#e6ffed;border:1px solid #c6f0d0;border-radius:6px}
-	</style>
-</head>
-<body>
-	<div class="container">
-		<h1>Join as a Member</h1>
-		<p>Complete the form to become a member of the Event Platform.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - Membership</title>
+    <style>
+      :root {
+        --ink: #101526;
+        --muted: #5e6477;
+        --bg: #f7f8fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #2147d7;
+        --line: #e6e9f2;
+        --hero-1: #7b2cff;
+        --hero-2: #6a3df7;
+        --hero-3: #2f63ff;
+      }
 
-		<form action="/membership" method="post" enctype="multipart/form-data">
-			<div class="row">
-				<div class="left">
-					<label for="fullName">Full name</label>
-					<input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required />
+      * {
+        box-sizing: border-box;
+      }
 
-					<label for="email" style="margin-top:12px">Email</label>
-					<input id="email" name="email" type="email" placeholder="jane@example.com" required />
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
 
-					<label for="phone" style="margin-top:12px">Phone</label>
-					<input id="phone" name="phone" type="text" placeholder="+65 6123 4567" />
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
 
-					<label for="type" style="margin-top:12px">Membership type</label>
-					<select id="type" name="type">
-						<option value="Free">Free</option>
-						<option value="Premium">Premium</option>
-						<option value="VIP">VIP</option>
-					</select>
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
 
-					<div style="margin-top:14px">
-						<button class="btn" type="submit">Submit</button>
-					</div>
-				</div>
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
 
-				<div class="right">
-					<label for="profileImage">Profile image</label>
-					<div class="preview">
-						<img id="imgPreview" src="/images/default-avatar.png" alt="preview" />
-						<div style="margin-top:8px">
-							<input id="profileImage" name="profileImage" type="file" accept="image/*" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
 
-		<% if (member) { %>
-			<div class="success">
-				<strong>Member saved</strong>
-				<div style="display:flex;gap:12px;margin-top:8px;align-items:center">
-					<div style="width:84px">
-						<% if (member.image) { %>
-							<img src="<%= member.image %>" style="width:84px;border-radius:6px" />
-						<% } else { %>
-							<img src="/images/default-avatar.png" style="width:84px;border-radius:6px" />
-						<% } %>
-					</div>
-					<div>
-						<div><strong><%= member.fullName %></strong></div>
-						<div><%= member.email %></div>
-						<div><%= member.phone %></div>
-						<div>Type: <%= member.type %></div>
-					</div>
-				</div>
-			</div>
-		<% } %>
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
 
-	</div>
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
 
-	<script>
-		const input = document.getElementById('profileImage');
-		const preview = document.getElementById('imgPreview');
-		input && input.addEventListener('change', (e) => {
-			const file = e.target.files && e.target.files[0];
-			if (!file) return;
-			const url = URL.createObjectURL(file);
-			preview.src = url;
-		});
-	</script>
-</body>
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+        border: none;
+        cursor: pointer;
+      }
+
+      .hero {
+        background: linear-gradient(120deg, var(--hero-1), var(--hero-2), var(--hero-3));
+        color: #ffffff;
+        padding: 70px 0 90px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: clamp(28px, 4.2vw, 40px);
+      }
+
+      .hero p {
+        margin: 0 auto;
+        max-width: 620px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .section {
+        padding: 60px 0;
+      }
+
+      .section h2 {
+        text-align: center;
+        margin: 0 0 10px;
+        font-size: clamp(22px, 3vw, 28px);
+      }
+
+      .section .lead {
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto 30px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .tier-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .tier-card {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        display: grid;
+        gap: 14px;
+        position: relative;
+      }
+
+      .tier-card.popular {
+        border: 2px solid #2f5bff;
+        box-shadow: 0 20px 40px rgba(47, 91, 255, 0.18);
+      }
+
+      .badge-popular {
+        position: absolute;
+        top: -12px;
+        right: 20px;
+        background: #2f5bff;
+        color: #ffffff;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .tier-title {
+        display: grid;
+        gap: 6px;
+      }
+
+      .tier-title span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .tier-price {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .tier-divider {
+        height: 1px;
+        background: var(--line);
+      }
+
+      .tier-list {
+        display: grid;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .tier-list span::before {
+        content: "✓";
+        color: #16a34a;
+        margin-right: 8px;
+        font-weight: 700;
+      }
+
+      .tier-btn {
+        margin-top: auto;
+        background: #111827;
+        color: #ffffff;
+        padding: 10px 14px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+
+      .tier-btn.primary {
+        background: var(--primary);
+      }
+
+      .tier-btn.owned {
+        background: #e2e8f0;
+        color: #64748b;
+        cursor: not-allowed;
+      }
+
+      .tier-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        text-align: center;
+      }
+
+      .step-card {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+      }
+
+      .step-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin: 0 auto 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        color: #2f5bff;
+        background: #eef2ff;
+      }
+
+      .comparison {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      thead {
+        background: #f8f9fc;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+      }
+
+      th {
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .benefit-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .benefit-card {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 960px) {
+        .tier-grid,
+        .steps {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .benefit-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          row-gap: 10px;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .tier-grid,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'membership' }) %>
+
+    <section class="hero">
+      <div class="container">
+        <h1>👑 NFT Membership Tiers</h1>
+        <p>Unlock exclusive benefits, early access, and VIP privileges with blockchain-verified membership NFTs.</p>
+        <div class="tier-status" id="tierStatus">Connect wallet to view your tier</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="tier-grid">
+          <div class="tier-card">
+            <div class="tier-title">
+              <strong>Bronze Membership</strong>
+              <span>NFT Membership Tier</span>
+            </div>
+            <div class="tier-price">0.1 ETH</div>
+            <span class="tier-note">One-time minting fee</span>
+            <div class="tier-divider"></div>
+            <div class="tier-list">
+              <span>10% discount on all ticket purchases</span>
+              <span>Early access to ticket sales (24 hours before)</span>
+              <span>Access to members-only events</span>
+              <span>Monthly newsletter with exclusive content</span>
+              <span>NFT membership badge</span>
+            </div>
+            <button
+              class="tier-btn"
+              data-tier="1"
+              data-default="Mint Bronze NFT"
+              data-price="0.1"
+              type="button"
+            >
+              Mint Bronze NFT
+            </button>
+          </div>
+
+          <div class="tier-card popular">
+            <span class="badge-popular">Most Popular</span>
+            <div class="tier-title">
+              <strong>Silver Membership</strong>
+              <span>NFT Membership Tier</span>
+            </div>
+            <div class="tier-price">0.25 ETH</div>
+            <span class="tier-note">One-time minting fee</span>
+            <div class="tier-divider"></div>
+            <div class="tier-list">
+              <span>15% discount on all ticket purchases</span>
+              <span>Early access to ticket sales (48 hours before)</span>
+              <span>Priority entry at events</span>
+              <span>Access to VIP lounges at select events</span>
+              <span>Exclusive merchandise discounts</span>
+              <span>Invitation to member appreciation events</span>
+            </div>
+            <button
+              class="tier-btn primary"
+              data-tier="2"
+              data-default="Mint Silver NFT"
+              data-price="0.25"
+              type="button"
+            >
+              Mint Silver NFT
+            </button>
+          </div>
+
+          <div class="tier-card">
+            <div class="tier-title">
+              <strong>Gold Membership</strong>
+              <span>NFT Membership Tier</span>
+            </div>
+            <div class="tier-price">0.5 ETH</div>
+            <span class="tier-note">One-time minting fee</span>
+            <div class="tier-divider"></div>
+            <div class="tier-list">
+              <span>25% discount on all ticket purchases</span>
+              <span>Early access to ticket sales (72 hours before)</span>
+              <span>VIP entry and premium seating</span>
+              <span>Full access to all VIP lounges</span>
+              <span>Free ticket transfer per event</span>
+              <span>Personal concierge service</span>
+            </div>
+            <button
+              class="tier-btn"
+              data-tier="3"
+              data-default="Mint Gold NFT"
+              data-price="0.5"
+              type="button"
+            >
+              Mint Gold NFT
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background: #ffffff;">
+      <div class="container">
+        <h2>How NFT Membership Works</h2>
+        <p class="lead">
+          Your membership is an NFT stored in your wallet, automatically granting you benefits through smart contracts.
+        </p>
+        <div class="steps">
+          <div class="step-card">
+            <div class="step-circle">1</div>
+            <h4>Choose Your Tier</h4>
+            <p>Select Bronze, Silver, or Gold based on your event attendance.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-circle">2</div>
+            <h4>Mint Your NFT</h4>
+            <p>Pay the one-time minting fee and receive your membership NFT.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-circle">3</div>
+            <h4>Automatic Benefits</h4>
+            <p>Smart contracts detect your NFT and apply benefits automatically.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-circle">4</div>
+            <h4>Enjoy Perks</h4>
+            <p>Access early tickets, discounts, and VIP entry at all events.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>Membership Comparison</h2>
+        <p class="lead">Compare the benefits of each tier at a glance.</p>
+        <div class="comparison">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Bronze</th>
+                <th>Silver</th>
+                <th>Gold</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ticket Discount</td>
+                <td>10%</td>
+                <td>15%</td>
+                <td>25%</td>
+              </tr>
+              <tr>
+                <td>Early Access</td>
+                <td>24h</td>
+                <td>48h</td>
+                <td>72h</td>
+              </tr>
+              <tr>
+                <td>VIP Entry</td>
+                <td>-</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>VIP Lounge Access</td>
+                <td>-</td>
+                <td>Select Events</td>
+                <td>All Events</td>
+              </tr>
+              <tr>
+                <td>Free Ticket Transfers</td>
+                <td>-</td>
+                <td>-</td>
+                <td>1 per event</td>
+              </tr>
+              <tr>
+                <td>Concierge Service</td>
+                <td>-</td>
+                <td>-</td>
+                <td>✓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background: #ffffff;">
+      <div class="container">
+        <h2>Why NFT Membership?</h2>
+        <p class="lead">A smarter, safer way to access exclusive event perks.</p>
+        <div class="benefit-grid">
+          <div class="benefit-card">
+            <h4>Automated Verification</h4>
+            <p>Smart contracts verify membership instantly with no manual approval.</p>
+          </div>
+          <div class="benefit-card">
+            <h4>True Ownership</h4>
+            <p>Your membership lives in your wallet and cannot be revoked.</p>
+          </div>
+          <div class="benefit-card">
+            <h4>Transparent Benefits</h4>
+            <p>All membership rules are encoded on-chain for fair access.</p>
+          </div>
+          <div class="benefit-card">
+            <h4>Transferable Asset</h4>
+            <p>NFT memberships can be traded or sold on secondary markets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script>
+      const walletButton = document.getElementById("walletButton");
+      const tierStatus = document.getElementById("tierStatus");
+      const tierButtons = Array.from(document.querySelectorAll(".tier-btn[data-tier]"));
+      const STORAGE_KEY = "chainevent_wallet";
+      let connectedAccount = null;
+      let membershipConfig = null;
+      const tierLabels = {
+        1: "Bronze",
+        2: "Silver",
+        3: "Gold",
+      };
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const setButtonState = () => {
+        if (!walletButton) return;
+        if (connectedAccount) {
+          setWalletLabel(walletButton, `Disconnect ${shortenAddress(connectedAccount)}`);
+        } else {
+          setWalletLabel(walletButton, "Connect Wallet");
+        }
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          await updateTierStatus();
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        setButtonState();
+        updateTierStatus();
+      };
+
+      const syncWallet = async () => {
+        if (!window.ethereum) return;
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          updateTierStatus();
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+      };
+
+      if (walletButton) {
+        walletButton.addEventListener("click", () => {
+          if (connectedAccount) {
+            disconnectWallet();
+          } else {
+            connectWallet();
+          }
+        });
+      }
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          updateTierStatus();
+        });
+      }
+
+      connectedAccount = localStorage.getItem(STORAGE_KEY);
+      setButtonState();
+      syncWallet();
+
+      const fetchMembershipConfig = async () => {
+        if (membershipConfig) return membershipConfig;
+        const response = await fetch("/api/membership-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load membership contract config");
+        }
+        membershipConfig = await response.json();
+        return membershipConfig;
+      };
+
+      const getMembershipContract = async () => {
+        if (!window.Web3) {
+          throw new Error("Web3 not available");
+        }
+        const config = await fetchMembershipConfig();
+        if (!config || !config.address || !config.abi) {
+          throw new Error("Membership contract not configured");
+        }
+        const web3 = new window.Web3(window.ethereum);
+        return new web3.eth.Contract(config.abi, config.address);
+      };
+
+      const updateTierStatus = async () => {
+        if (!tierStatus) return;
+        if (!connectedAccount) {
+          tierStatus.textContent = "Connect wallet to view your tier";
+          tierButtons.forEach((button) => {
+            button.disabled = false;
+            button.classList.remove("owned");
+            button.textContent = button.dataset.default;
+          });
+          return;
+        }
+        try {
+          const contract = await getMembershipContract();
+          const tierValue = Number(await contract.methods.getTier(connectedAccount).call());
+          if (!tierValue) {
+            tierStatus.textContent = "You are currently an Ordinary Member";
+          } else {
+            tierStatus.textContent = `Current tier: ${tierLabels[tierValue] || "Unknown"}`;
+          }
+          tierButtons.forEach((button) => {
+            const tier = Number(button.dataset.tier);
+            if (tierValue >= tier && tierValue !== 0) {
+              button.textContent = "You already have this";
+              button.classList.add("owned");
+              button.disabled = true;
+            } else {
+              button.textContent = button.dataset.default;
+              button.classList.remove("owned");
+              button.disabled = false;
+            }
+          });
+        } catch (error) {
+          console.error("Failed to fetch membership tier:", error);
+          tierStatus.textContent = "You are currently normal tier";
+        }
+      };
+
+      const purchaseTier = async (tier, priceEth) => {
+        try {
+          if (!connectedAccount) {
+            await connectWallet();
+          }
+          if (!connectedAccount) return;
+          const contract = await getMembershipContract();
+          const web3 = new window.Web3(window.ethereum);
+          const value = web3.utils.toWei(priceEth, "ether");
+          await contract.methods.buyMembership(tier).send({
+            from: connectedAccount,
+            value,
+          });
+          await updateTierStatus();
+          alert("Membership purchased successfully.");
+        } catch (error) {
+          console.error("Membership purchase failed:", error);
+          alert("Transaction was cancelled or failed.");
+        }
+      };
+
+      tierButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const tier = Number(button.dataset.tier);
+          const priceEth = button.dataset.price;
+          if (!tier || !priceEth) return;
+          purchaseTier(tier, priceEth);
+        });
+      });
+
+      updateTierStatus();
+    </script>
+  </body>
 </html>

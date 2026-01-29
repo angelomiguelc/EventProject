@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - Events</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --chip: #e6edff;
+        --hero-1: #3d4bff;
+        --hero-2: #7b3df1;
+        --hero-3: #9a36d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+        border: none;
+        cursor: pointer;
+      }
+
+      .hero {
+        background: linear-gradient(130deg, var(--hero-1), var(--hero-2), var(--hero-3));
+        color: #ffffff;
+        padding: 70px 0 120px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -120px -160px auto;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+        opacity: 0.7;
+      }
+
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+        font-size: 12px;
+        letter-spacing: 0.3px;
+      }
+
+      .hero h1 {
+        font-size: clamp(32px, 4vw, 48px);
+        margin: 18px 0 12px;
+        line-height: 1.1;
+      }
+
+      .hero p {
+        max-width: 560px;
+        line-height: 1.6;
+        margin: 0 auto;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .hero-content {
+        text-align: center;
+      }
+
+      .feature-row {
+        margin-top: 44px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .feature {
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        padding: 18px;
+        border-radius: 16px;
+        text-align: center;
+        backdrop-filter: blur(6px);
+      }
+
+      .feature-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        display: grid;
+        place-items: center;
+        margin: 0 auto 6px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+      }
+
+      .feature h4 {
+        margin: 8px 0 6px;
+        font-size: 15px;
+      }
+
+      .feature p {
+        font-size: 13px;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.78);
+      }
+
+      .section {
+        padding: 64px 0 70px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .section h2 {
+        font-size: 24px;
+        margin-bottom: 6px;
+      }
+
+      .section p {
+        color: var(--muted);
+        margin-top: 0;
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 24px 0 32px;
+      }
+
+      .btn-secondary {
+        background: #e8eeff;
+        color: #1f49e2;
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .filter-chip {
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid #e3e6ef;
+        background: #ffffff;
+        font-size: 13px;
+        color: #4b5563;
+      }
+
+      .filter-chip.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+      }
+
+      .events-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .empty-state {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+        grid-column: 1 / -1;
+      }
+
+      .event-card {
+        background: var(--card);
+        border-radius: 18px;
+        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .event-media {
+        height: 170px;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .event-media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.25));
+      }
+
+      .badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #ffffff;
+        color: #111827;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 1;
+      }
+
+      .delete-chip {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 1;
+      }
+
+      .event-body {
+        padding: 18px 18px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 0 0 auto;
+      }
+
+      .event-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .event-title {
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .event-title-link {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .event-title-link:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .event-tag {
+        align-self: flex-start;
+        background: #f2f4ff;
+        color: #3f51ff;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .event-meta {
+        display: grid;
+        gap: 8px;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .event-meta span {
+        display: inline-flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .event-desc {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      .event-desc + .event-divider {
+        margin-top: 8px;
+      }
+
+      .event-divider {
+        height: 1px;
+        background: #e5e7eb;
+        width: 100%;
+        margin: 0;
+      }
+
+      .meta-icon {
+        width: 14px;
+        height: 14px;
+        color: #6b7280;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .event-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 6px;
+      }
+
+      .event-footer-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        align-items: flex-start;
+      }
+
+      .event-footer-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .price {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .price-current {
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .price-base {
+        font-size: 12px;
+        font-weight: 500;
+        color: #9ca3af;
+        text-decoration: line-through;
+      }
+
+      .price-discount {
+        font-size: 11px;
+        font-weight: 600;
+        color: #059669;
+        background: #ecfdf5;
+        border: 1px solid #d1fae5;
+        padding: 2px 6px;
+        border-radius: 999px;
+      }
+
+      .small-chip {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--chip);
+        color: #2f5bff;
+        margin-left: 6px;
+      }
+
+      .ticket-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .btn-outline {
+        background: #e8eeff;
+        color: #1f49e2;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .btn-danger {
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+
+      .event-actions {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .event-actions .btn-outline,
+      .event-actions .btn-buy {
+        text-align: center;
+      }
+
+      .btn-buy {
+        background: #10b981;
+        color: #ffffff;
+        padding: 11px 20px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 960px) {
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .feature-row,
+        .events-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .footer-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .nav-links {
+          flex-wrap: wrap;
+          row-gap: 10px;
+        }
+
+        .section-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .feature-row,
+        .events-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .event-footer {
+          flex-wrap: wrap;
+        }
+
+        .event-footer-right {
+          width: 100%;
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'events' }) %>
+
+    <section class="hero">
+      <div class="container hero-content">
+        <span class="hero-pill">Blockchain-Verified Events</span>
+        <h1>Secure Event Ticketing with NFT Technology</h1>
+        <p>
+          Experience the future of event access. Every ticket is an NFT on the
+          blockchain -- transparent, transferable, and tamper-proof.
+        </p>
+
+        <div class="feature-row">
+          <div class="feature">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <h4>Fraud Prevention</h4>
+            <p>Blockchain verification eliminates counterfeit tickets.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+              </svg>
+            </div>
+            <h4>Instant Transfer</h4>
+            <p>Transfer tickets securely via smart contracts.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <h4>Member Benefits</h4>
+            <p>NFT memberships unlock exclusive perks and discounts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Upcoming Events</h2>
+            <p>Browse NFT-verified events and secure your blockchain-backed tickets.</p>
+          </div>
+          <a class="btn-secondary admin-only" id="addEventButton" href="/events/new">Add New Event</a>
+        </div>
+
+        <div class="filters">
+          <span class="filter-chip active" data-category="All">All Events</span>
+          <span class="filter-chip" data-category="Music Festival">Music Festival</span>
+          <span class="filter-chip" data-category="Conference">Conference</span>
+          <span class="filter-chip" data-category="Concert">Concert</span>
+          <span class="filter-chip" data-category="Sports">Sports</span>
+          <span class="filter-chip" data-category="Art &amp; Culture">Art &amp; Culture</span>
+        </div>
+
+        <div class="events-grid">
+          <% const gradients = [
+            'linear-gradient(120deg, #f97316, #f43f5e)',
+            'linear-gradient(120deg, #2563eb, #0ea5e9)',
+            'linear-gradient(120deg, #111827, #4b5563)',
+            'linear-gradient(120deg, #22c55e, #16a34a)',
+            'linear-gradient(120deg, #0f766e, #14b8a6)',
+            'linear-gradient(120deg, #facc15, #f97316)'
+          ]; %>
+          <% if (events && events.length) { %>
+            <% events.forEach((event, index) => { %>
+              <% const mediaStyle = event.image ? `url('${event.image}')` : gradients[index % gradients.length]; %>
+              <% const dateObj = new Date(event.date); %>
+              <% const formattedDate = isNaN(dateObj.getTime())
+                ? event.date
+                : dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }); %>
+              <article class="event-card" data-category="<%= event.category || '' %>">
+                <div
+                  class="event-media"
+                  style="background-image: <%= mediaStyle %>;"
+                >
+                  <form
+                    class="admin-only delete-chip"
+                    method="post"
+                    action="/events/delete"
+                    data-event-id="<%= event.id %>"
+                  >
+                    <input type="hidden" name="eventId" value="<%= event.id %>" />
+                    <input type="hidden" name="walletAddress" value="" />
+                    <button class="btn-danger" type="submit">Delete</button>
+                  </form>
+                  <span class="badge">NFT Verified</span>
+                </div>
+                <div class="event-body">
+                  <div class="event-title-row">
+                    <h3 class="event-title">
+                      <a class="event-title-link" href="/events/<%= encodeURIComponent(event.id) %>">
+                        <%= event.name %>
+                      </a>
+                    </h3>
+                    <span class="event-tag"><%= event.category || 'Event' %></span>
+                  </div>
+                  <div class="event-meta">
+                    <span>
+                      <svg class="meta-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M8 2v4"></path>
+                        <path d="M16 2v4"></path>
+                        <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                        <path d="M3 10h18"></path>
+                      </svg>
+                      <%= formattedDate %>
+                    </span>
+                    <span>
+                      <svg class="meta-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                      <%= event.location %>
+                    </span>
+                  </div>
+                  <p class="event-desc"><%= event.about %></p>
+                  <div class="event-divider"></div>
+                  <div class="event-footer">
+                    <div class="event-footer-left">
+                      <span
+                        class="price"
+                        data-event-id="<%= event.onChainId || '' %>"
+                        data-base-price="<%= typeof event.price !== 'undefined' ? event.price : '' %>"
+                      >
+                        <span class="price-current">
+                          <%= typeof event.price !== 'undefined' ? `${event.price} ETH` : 'N/A' %>
+                        </span>
+                        <span class="price-base" hidden></span>
+                        <span class="price-discount" hidden></span>
+                      </span>
+                      <span class="ticket-status">
+                        <svg class="meta-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path>
+                          <path d="M13 5v2"></path>
+                          <path d="M13 17v2"></path>
+                          <path d="M13 11v2"></path>
+                        </svg>
+                        <span
+                          class="ticket-available"
+                          data-event-id="<%= event.onChainId || '' %>"
+                          data-total="<%= event.ticketsAvailable %>"
+                        >
+                          <%= event.ticketsAvailable %>/<%= event.ticketsAvailable %> available
+                        </span>
+                      </span>
+                    </div>
+                    <div class="event-footer-right">
+                      <div class="event-actions">
+                        <button
+                          class="btn-buy"
+                          type="button"
+                          data-event-id="<%= event.onChainId || '' %>"
+                        >
+                          Buy
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            <% }); %>
+          <% } else { %>
+            <div class="empty-state">
+              No events yet. Click "Add New Event" to create your first listing.
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script>
+      const walletButton = document.getElementById("walletButton");
+      const adminWallet = "<%= (adminWallet || '') %>".toLowerCase();
+      const STORAGE_KEY = "chainevent_wallet";
+      let connectedAccount = null;
+      let contractConfig = null;
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const setButtonState = () => {
+        if (connectedAccount) {
+          setWalletLabel(walletButton, `Disconnect ${shortenAddress(connectedAccount)}`);
+        } else {
+          setWalletLabel(walletButton, "Connect Wallet");
+        }
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          }
+          setButtonState();
+          updateAddEventGate();
+          updateAdminUi();
+          refreshEventPrices();
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        setButtonState();
+        updateAddEventGate();
+        updateAdminUi();
+        refreshEventPrices();
+      };
+
+      const syncWallet = async () => {
+        if (!window.ethereum) {
+          refreshEventPrices();
+          return;
+        }
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          updateAddEventGate();
+          updateAdminUi();
+          refreshEventPrices();
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+      };
+
+      const fetchContractConfig = async () => {
+        if (contractConfig) return contractConfig;
+        const response = await fetch("/api/contract-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load contract config");
+        }
+        contractConfig = await response.json();
+        return contractConfig;
+      };
+
+      const getContract = async () => {
+        if (!window.Web3) {
+          throw new Error("Web3 not available");
+        }
+        const config = await fetchContractConfig();
+        if (!config || !config.address || !config.abi) {
+          throw new Error("Contract not configured");
+        }
+        const web3 = new window.Web3(window.ethereum);
+        return new web3.eth.Contract(config.abi, config.address);
+      };
+
+      const formatEth = (value) => {
+        if (value === null || typeof value === "undefined") return "";
+        const raw = String(value);
+        if (!raw.includes(".")) return raw;
+        return raw.replace(/(\.\d*?[1-9])0+$/, "$1").replace(/\.0+$/, "");
+      };
+
+      const formatPercent = (value) => {
+        if (!Number.isFinite(value)) return "";
+        return value % 1 === 0
+          ? String(value)
+          : String(value.toFixed(2)).replace(/\.?0+$/, "");
+      };
+
+      const getDiscountPercent = (baseWei, discountedWei) => {
+        if (!baseWei || !discountedWei) return 0;
+        const base = BigInt(baseWei);
+        const discounted = BigInt(discountedWei);
+        if (discounted >= base) return 0;
+        const bps = ((base - discounted) * 10000n) / base;
+        return Number(bps) / 100;
+      };
+
+      const updatePriceNode = (node, baseEth, discountedEth, discountPercent) => {
+        if (!node) return;
+        const currentEl = node.querySelector(".price-current");
+        const baseEl = node.querySelector(".price-base");
+        const discountEl = node.querySelector(".price-discount");
+        const baseLabel = baseEth ? `${baseEth} ETH` : "N/A";
+        if (currentEl) {
+          currentEl.textContent = baseLabel;
+        }
+        if (!discountPercent || !discountedEth || discountedEth === baseEth) {
+          if (baseEl) baseEl.hidden = true;
+          if (discountEl) discountEl.hidden = true;
+          return;
+        }
+        if (currentEl) {
+          currentEl.textContent = `${discountedEth} ETH`;
+        }
+        if (baseEl) {
+          baseEl.textContent = baseLabel;
+          baseEl.hidden = false;
+        }
+        if (discountEl) {
+          discountEl.textContent = `${formatPercent(discountPercent)}% off`;
+          discountEl.hidden = false;
+        }
+      };
+
+      const refreshEventPrices = async () => {
+        const priceNodes = Array.from(document.querySelectorAll(".price[data-event-id]"));
+        if (!priceNodes.length) return;
+        if (!window.Web3 || !window.ethereum) {
+          priceNodes.forEach((node) => {
+            const basePrice = node.dataset.basePrice || "";
+            updatePriceNode(node, basePrice ? formatEth(basePrice) : "N/A", null, 0);
+          });
+          return;
+        }
+        let contract;
+        try {
+          contract = await getContract();
+        } catch (error) {
+          console.error("Failed to load contract for pricing:", error);
+          priceNodes.forEach((node) => {
+            const basePrice = node.dataset.basePrice || "";
+            updatePriceNode(node, basePrice ? formatEth(basePrice) : "N/A", null, 0);
+          });
+          return;
+        }
+        const web3 = new window.Web3(window.ethereum);
+        for (const node of priceNodes) {
+          const eventId = node.dataset.eventId;
+          const fallbackBase = node.dataset.basePrice || "";
+          if (!eventId) {
+            updatePriceNode(node, fallbackBase ? formatEth(fallbackBase) : "N/A", null, 0);
+            continue;
+          }
+          let baseWei = null;
+          try {
+            const eventInfo = await contract.methods.getEvent(eventId).call();
+            if (eventInfo && eventInfo.id && String(eventInfo.id) !== "0" && eventInfo.price) {
+              baseWei = String(eventInfo.price);
+            }
+          } catch (error) {
+            console.error("Failed to load event price:", error);
+          }
+          if (!baseWei && fallbackBase) {
+            baseWei = web3.utils.toWei(String(fallbackBase), "ether");
+          }
+          if (!baseWei) {
+            updatePriceNode(node, "N/A", null, 0);
+            continue;
+          }
+          const baseEth = formatEth(web3.utils.fromWei(baseWei, "ether"));
+          let discountedWei = baseWei;
+          if (connectedAccount) {
+            try {
+              discountedWei = await contract.methods
+                .getTicketPrice(eventId, connectedAccount)
+                .call();
+            } catch (error) {
+              console.error("Failed to load discounted price:", error);
+            }
+          }
+          const discountedEth = formatEth(web3.utils.fromWei(String(discountedWei), "ether"));
+          const discountPercent = getDiscountPercent(baseWei, discountedWei);
+          updatePriceNode(node, baseEth, discountedEth, discountPercent);
+        }
+      };
+
+      const refreshTicketCounts = async () => {
+        const nodes = Array.from(document.querySelectorAll(".ticket-available"));
+        if (!nodes.length) return;
+        try {
+          const contract = await getContract();
+          for (const node of nodes) {
+            const eventId = node.dataset.eventId;
+            if (!eventId) continue;
+            const total = node.dataset.total || "0";
+            const eventInfo = await contract.methods.getEvent(eventId).call();
+            const remaining = eventInfo && eventInfo.ticketsAvailable ? eventInfo.ticketsAvailable : "0";
+            node.textContent = `${remaining}/${total} available`;
+          }
+        } catch (error) {
+          console.error("Failed to refresh ticket counts:", error);
+        }
+      };
+
+      const buyTicket = async (eventId) => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+        if (!connectedAccount) {
+          await connectWallet();
+          if (!connectedAccount) return;
+        }
+        try {
+          const contract = await getContract();
+          const eventInfo = await contract.methods.getEvent(eventId).call();
+          if (!eventInfo || eventInfo.id === "0") {
+            alert("Event not found on-chain. Please recreate the event.");
+            return;
+          }
+          if (Number(eventInfo.ticketsAvailable) <= 0) {
+            alert("This event is sold out.");
+            return;
+          }
+          const owns = await contract.methods.hasTicket(eventId, connectedAccount).call();
+          if (owns) {
+            alert("You already have this ticket.");
+            return;
+          }
+          const expectedWei = await contract.methods
+            .getTicketPrice(eventId, connectedAccount)
+            .call();
+          if (!expectedWei || String(expectedWei) === "0") {
+            alert("Ticket price unavailable. Please try again.");
+            return;
+          }
+          await contract.methods.buyTicket(eventId).send({
+            from: connectedAccount,
+            value: expectedWei,
+          });
+          alert("Transaction confirmed. Ticket added to your wallet.");
+          refreshTicketCounts();
+        } catch (error) {
+          console.error("Purchase failed:", error);
+          alert(error && error.message ? error.message : "Transaction was cancelled or failed.");
+        }
+      };
+
+      const isAdmin = () =>
+        Boolean(connectedAccount) && connectedAccount.toLowerCase() === adminWallet;
+
+      const updateAdminUi = () => {
+        document.querySelectorAll(".admin-only").forEach((node) => {
+          node.style.display = isAdmin() ? "" : "none";
+        });
+        document.querySelectorAll("form.admin-only input[name=\"walletAddress\"]").forEach((input) => {
+          input.value = isAdmin() ? connectedAccount : "";
+        });
+      };
+
+      walletButton.addEventListener("click", () => {
+        if (connectedAccount) {
+          disconnectWallet();
+        } else {
+          connectWallet();
+        }
+      });
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          setButtonState();
+          updateAddEventGate();
+          updateAdminUi();
+          refreshEventPrices();
+        });
+      }
+
+      const addEventButton = document.getElementById("addEventButton");
+
+      const updateAddEventGate = () => {
+        if (!addEventButton) return;
+        if (isAdmin()) {
+          addEventButton.setAttribute("href", "/events/new");
+        } else {
+          addEventButton.setAttribute("href", "#");
+        }
+      };
+
+      const bindCategoryFilters = () => {
+        const chips = Array.from(document.querySelectorAll(".filter-chip"));
+        const cards = Array.from(document.querySelectorAll(".event-card"));
+        if (!chips.length || !cards.length) return;
+
+        const setActive = (target) => {
+          chips.forEach((chip) => chip.classList.remove("active"));
+          target.classList.add("active");
+        };
+
+        const filterCards = (category) => {
+          const normalized = category.toLowerCase();
+          cards.forEach((card) => {
+            const cardCategory = (card.dataset.category || "").toLowerCase();
+            const match = normalized === "all" || cardCategory === normalized;
+            card.style.display = match ? "" : "none";
+          });
+        };
+
+        chips.forEach((chip) => {
+          chip.addEventListener("click", () => {
+            const category = chip.dataset.category || "All";
+            setActive(chip);
+            filterCards(category);
+          });
+        });
+      };
+
+      const bindDeleteHandlers = () => {
+        document.querySelectorAll("form.admin-only[data-event-id]").forEach((form) => {
+          if (form.dataset.bound === "true") return;
+          form.dataset.bound = "true";
+          form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!isAdmin()) {
+              alert("Only the admin wallet can delete events.");
+              return;
+            }
+            const eventId = form.dataset.eventId || "";
+            const body = new URLSearchParams({
+              eventId,
+              walletAddress: connectedAccount || "",
+            });
+            try {
+              const response = await fetch("/events/delete", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  Accept: "application/json",
+                },
+                body,
+              });
+              if (!response.ok) {
+                alert("Delete failed. Please try again.");
+                return;
+              }
+              const card = form.closest(".event-card");
+              if (card) {
+                card.remove();
+              }
+            } catch (error) {
+              console.error("Delete failed:", error);
+              alert("Delete failed. Please try again.");
+            }
+          });
+        });
+      };
+
+      const bindBuyHandlers = () => {
+        document.querySelectorAll(".btn-buy").forEach((button) => {
+          if (button.dataset.bound === "true") return;
+          button.dataset.bound = "true";
+          button.addEventListener("click", () => {
+            const eventId = button.dataset.eventId;
+            if (!eventId) {
+              alert("On-chain event id missing. Please delete and recreate this event.");
+              return;
+            }
+            buyTicket(eventId);
+          });
+        });
+      };
+
+      addEventButton.addEventListener("click", (event) => {
+        if (!isAdmin()) {
+          event.preventDefault();
+          alert("Only the admin wallet can add events.");
+        }
+      });
+
+      connectedAccount = localStorage.getItem(STORAGE_KEY);
+      setButtonState();
+      updateAddEventGate();
+      updateAdminUi();
+      syncWallet();
+      bindDeleteHandlers();
+      bindBuyHandlers();
+      bindCategoryFilters();
+      refreshTicketCounts();
+    </script>
+  </body>
+</html>

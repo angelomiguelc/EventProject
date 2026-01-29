@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainEvent - My Tickets</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --primary: #2f5bff;
+        --primary-strong: #1c43d6;
+        --hero-1: #3d4bff;
+        --hero-2: #7b3df1;
+        --hero-3: #9a36d8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", "Trebuchet MS", sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        background: #ffffff;
+        border-bottom: 1px solid #eef0f6;
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 10px;
+        border: 2px solid #2f5bff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: #2f5bff;
+      }
+
+      .btn {
+        background: var(--primary);
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(47, 91, 255, 0.2);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: #525b70;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .hero {
+        background: linear-gradient(130deg, var(--hero-1), var(--hero-2), var(--hero-3));
+        color: #ffffff;
+        padding: 60px 0 100px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 10px;
+        font-size: clamp(30px, 4vw, 42px);
+      }
+
+      .hero p {
+        margin: 0 auto;
+        max-width: 560px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .card {
+        margin-top: -60px;
+        background: var(--card);
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+      }
+
+      .status {
+        display: grid;
+        gap: 12px;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .tickets-header {
+        text-align: left;
+        display: grid;
+        gap: 6px;
+      }
+
+      .tickets-title-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .status-title {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      .status-sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .wallet-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: #eef2ff;
+        color: #1e3a8a;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .wallet-copy {
+        border: none;
+        background: #ffffff;
+        color: #1e3a8a;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .notice {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 13px;
+        color: #6b7280;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .ticket-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .ticket-grid-empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #64748b;
+        width: 100%;
+        min-height: 120px;
+        grid-column: 1 / -1;
+      }
+
+      .ticket-card {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+      }
+
+      .ticket-hero {
+        padding: 18px;
+        color: #ffffff;
+        display: grid;
+        gap: 10px;
+        background: linear-gradient(120deg, #2f5bff, #8b2ff7);
+      }
+
+      .ticket-hero h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .ticket-meta {
+        display: grid;
+        gap: 8px;
+        font-size: 13px;
+        color: #e0e7ff;
+      }
+
+      .ticket-body {
+        padding: 16px 18px 18px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .ticket-info {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .ticket-code {
+        border: 1px dashed #d1d5db;
+        border-radius: 12px;
+        height: 110px;
+        display: grid;
+        place-items: center;
+        color: #94a3b8;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .ticket-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .ticket-btn {
+        flex: 1;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        color: #111827;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .ticket-icon-btn {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .feature-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        padding: 14px 16px;
+        display: grid;
+        gap: 6px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #eef0f6;
+        padding: 50px 0 30px;
+        margin-top: 70px;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .footer h5 {
+        margin: 0 0 10px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+      }
+
+      .footer a,
+      .footer p {
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      .footer-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #eef0f6;
+        padding-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      @media (max-width: 720px) {
+        .nav-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-links {
+          flex-wrap: wrap;
+          row-gap: 10px;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .ticket-grid,
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('partials/header', { activePage: 'mytickets', walletButtonId: 'navWalletButton' }) %>
+
+    <section class="hero">
+      <div class="container">
+        <h1>My Tickets</h1>
+        <p>Connect your wallet to see the tickets linked to your account.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="status" id="walletStatus">
+          <h2 class="status-title">Connect your wallet to view tickets</h2>
+          <p class="status-sub">You can disconnect anytime.</p>
+          <button class="btn" id="walletButton" type="button">Connect Wallet</button>
+        </div>
+      </div>
+    </section>
+
+    <%- include('partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+    <script>
+      const walletButton = document.getElementById("walletButton");
+      const navWalletButton = document.getElementById("navWalletButton");
+      const walletStatus = document.getElementById("walletStatus");
+      const STORAGE_KEY = "chainevent_wallet";
+      let connectedAccount = null;
+      let contractConfig = null;
+
+      const fetchContractConfig = async () => {
+        if (contractConfig) return contractConfig;
+        const response = await fetch("/api/contract-config", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("Failed to load contract config");
+        }
+        contractConfig = await response.json();
+        return contractConfig;
+      };
+
+      const getContract = async () => {
+        if (!window.Web3) {
+          throw new Error("Web3 not available");
+        }
+        const config = await fetchContractConfig();
+        if (!config || !config.address || !config.abi) {
+          throw new Error("Contract not configured");
+        }
+        const web3 = new window.Web3(window.ethereum);
+        return new web3.eth.Contract(config.abi, config.address);
+      };
+
+      const syncConnectedAccount = async () => {
+        if (!window.ethereum) return connectedAccount;
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_accounts" });
+          const account = accounts[0] || null;
+          if (account) {
+            connectedAccount = account;
+            localStorage.setItem(STORAGE_KEY, account);
+          } else {
+            connectedAccount = null;
+            localStorage.removeItem(STORAGE_KEY);
+          }
+        } catch (error) {
+          console.error("Wallet sync failed:", error);
+        }
+        return connectedAccount;
+      };
+
+      const shortenAddress = (address) => {
+        if (!address) return "";
+        return `${address.slice(0, 6)}...${address.slice(-4)}`;
+      };
+
+      const setWalletLabel = (button, label) => {
+        if (!button) return;
+        const labelEl = button.querySelector(".wallet-label");
+        if (labelEl) {
+          labelEl.textContent = label;
+        } else {
+          button.textContent = label;
+        }
+      };
+
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        if (Number.isNaN(date.getTime())) return dateString;
+        return date.toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        });
+      };
+
+      const buildQrCode = (event, index) => {
+        const name = (event?.name || "").trim();
+        const initials = name
+          .split(/\s+/)
+          .filter(Boolean)
+          .map((part) => part[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 3);
+        const prefix = initials || "EVT";
+        const raw = event?.onChainId ?? event?.id ?? index + 1;
+        const suffix = String(raw).replace(/[^0-9]/g, "").slice(-4).padStart(4, "0");
+        return `QR-${prefix}-${suffix}`;
+      };
+
+      const renderTickets = (events) => {
+        const ticketGrid = document.getElementById("ticketGrid");
+        if (!ticketGrid) return;
+        const gradients = [
+          "linear-gradient(120deg, #2f5bff, #8b2ff7)",
+          "linear-gradient(120deg, #7c3aed, #2563eb)",
+          "linear-gradient(120deg, #f97316, #f43f5e)",
+        ];
+        const items = (events || []).slice(0, 2);
+        if (!items.length) {
+          ticketGrid.innerHTML = "<div class=\"ticket-grid-empty\">No tickets found yet.</div>";
+          return;
+        }
+        ticketGrid.innerHTML = items
+          .map((event, index) => {
+            const tokenId = `NFT-${event.onChainId || `EV-${index + 1}`}`;
+            const dateLabel = formatDate(event.date);
+            const qrCode = buildQrCode(event, index);
+            return `
+              <div class="ticket-card">
+                <div class="ticket-hero" style="background:${gradients[index % gradients.length]}">
+                  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+                    <h3>${event.name || "Event Ticket"}</h3>
+                    <div style="text-align:right;font-size:11px">
+                      <div>Token ID</div>
+                      <strong>${tokenId}</strong>
+                    </div>
+                  </div>
+                  <div class="ticket-meta">
+                    <span>📅 ${dateLabel}</span>
+                    <span>📍 ${event.location || "Location TBA"}</span>
+                  </div>
+                </div>
+                <div class="ticket-body">
+                  <div class="ticket-info">
+                    <div>
+                      <div>Owner Address</div>
+                      <strong>${shortenAddress(connectedAccount)}</strong>
+                    </div>
+                    <div>
+                      <div>Minted Date</div>
+                      <strong>${new Date().toLocaleDateString("en-GB")}</strong>
+                    </div>
+                  </div>
+                  <div class="ticket-code">${qrCode}</div>
+                  <div class="ticket-actions">
+                    <button class="ticket-btn" type="button" data-event-id="${event.onChainId || ""}">Transfer Ticket</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      };
+
+      const loadOwnedTickets = async () => {
+        const ticketGrid = document.getElementById("ticketGrid");
+        if (!ticketGrid) return;
+        ticketGrid.innerHTML = "<div>Loading tickets...</div>";
+        try {
+          const account = await syncConnectedAccount();
+          if (!account) {
+            renderStatus();
+            return;
+          }
+          const contract = await getContract();
+          const response = await fetch("/data/events.json");
+          const events = await response.json();
+          const owned = [];
+          for (const event of events) {
+            if (!event || !event.onChainId) continue;
+            const hasTicket = await contract.methods
+              .hasTicket(event.onChainId, account)
+              .call();
+            if (hasTicket) {
+              owned.push(event);
+            }
+          }
+          renderTickets(owned);
+          bindTransferButtons();
+        } catch (error) {
+          console.error("Failed to load tickets:", error);
+          renderTickets([]);
+        }
+      };
+
+      const renderStatus = () => {
+        if (connectedAccount) {
+          walletStatus.innerHTML = `
+            <div class="tickets-header">
+              <div class="tickets-title-row">
+                <h2 class="status-title">My NFT Tickets</h2>
+                <span class="wallet-pill">
+                  ${shortenAddress(connectedAccount)}
+                  <button class="wallet-copy" id="copyWalletBtn" type="button">Copy</button>
+                </span>
+              </div>
+              <p class="status-sub">Your blockchain-verified event tickets stored in your wallet.</p>
+            </div>
+            <div class="notice">
+              <span>ⓘ</span>
+              <span>All tickets are NFTs stored on the blockchain. You have full ownership and can transfer them.</span>
+            </div>
+            <div class="ticket-grid" id="ticketGrid"></div>
+            <div class="feature-grid">
+              <div class="feature-card">
+                <strong>Transfer Tickets</strong>
+                Transfer your tickets securely to another wallet address.
+              </div>
+              <div class="feature-card">
+                <strong>Blockchain Verified</strong>
+                Verify authenticity with a unique on-chain token ID.
+              </div>
+              <div class="feature-card">
+                <strong>Entry Verification</strong>
+                Show your NFT at the event for instant entry.
+              </div>
+            </div>
+          `;
+          loadOwnedTickets();
+        } else {
+          walletStatus.innerHTML = `
+            <h2 class="status-title">Connect your wallet to view tickets</h2>
+            <p class="status-sub">You can disconnect anytime.</p>
+            <button class="btn" id="walletButton" type="button">Connect Wallet</button>
+          `;
+        }
+        if (navWalletButton) {
+          setWalletLabel(
+            navWalletButton,
+            connectedAccount ? `Disconnect ${shortenAddress(connectedAccount)}` : "Connect Wallet"
+          );
+        }
+        bindButton();
+        bindCopyButton();
+      };
+
+      const bindTransferButtons = () => {
+        document.querySelectorAll(".ticket-btn[data-event-id]").forEach((button) => {
+          if (button.dataset.bound === "true") return;
+          button.dataset.bound = "true";
+          button.addEventListener("click", async () => {
+            const eventId = button.dataset.eventId;
+            if (!eventId) {
+              alert("On-chain event id missing for this ticket.");
+              return;
+            }
+            const recipient = prompt("Enter the wallet address to transfer this ticket to:");
+            if (!recipient) return;
+            try {
+              const contract = await getContract();
+              const web3 = new window.Web3(window.ethereum);
+              if (!web3.utils.isAddress(recipient)) {
+                alert("Invalid wallet address.");
+                return;
+              }
+              await contract.methods.transferTicket(eventId, recipient).send({
+                from: connectedAccount,
+              });
+              alert("Ticket transferred successfully.");
+              loadOwnedTickets();
+            } catch (error) {
+              console.error("Transfer failed:", error);
+              alert("Transfer cancelled or failed.");
+            }
+          });
+        });
+      };
+
+      const bindCopyButton = () => {
+        const copyButton = document.getElementById("copyWalletBtn");
+        if (!copyButton || !connectedAccount) return;
+        copyButton.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(connectedAccount);
+            copyButton.textContent = "Copied";
+            setTimeout(() => {
+              copyButton.textContent = "Copy";
+            }, 1200);
+          } catch (error) {
+            console.error("Copy failed:", error);
+            alert("Unable to copy wallet address.");
+          }
+        });
+      };
+
+      const connectWallet = async () => {
+        if (!window.ethereum) {
+          alert("MetaMask not detected. Please install MetaMask to continue.");
+          return;
+        }
+        try {
+          try {
+            await window.ethereum.request({
+              method: "wallet_requestPermissions",
+              params: [{ eth_accounts: {} }],
+            });
+          } catch (permError) {
+            if (permError && permError.code === 4001) {
+              return;
+            }
+          }
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          }
+          renderStatus();
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      };
+
+      const disconnectWallet = () => {
+        connectedAccount = null;
+        localStorage.removeItem(STORAGE_KEY);
+        renderStatus();
+      };
+
+      const bindButton = () => {
+        const button = document.getElementById("walletButton");
+        if (button) {
+          button.addEventListener("click", () => {
+            if (connectedAccount) {
+              disconnectWallet();
+            } else {
+              connectWallet();
+            }
+          });
+        }
+        if (navWalletButton) {
+          navWalletButton.onclick = () => {
+            if (connectedAccount) {
+              disconnectWallet();
+            } else {
+              connectWallet();
+            }
+          };
+        }
+      };
+
+      if (window.ethereum) {
+        window.ethereum.on("accountsChanged", (accounts) => {
+          connectedAccount = accounts[0] || null;
+          if (connectedAccount) {
+            localStorage.setItem(STORAGE_KEY, connectedAccount);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          renderStatus();
+        });
+      }
+
+      connectedAccount = localStorage.getItem(STORAGE_KEY);
+      renderStatus();
+      syncConnectedAccount().then(renderStatus);
+    </script>
+  </body>
+</html>
