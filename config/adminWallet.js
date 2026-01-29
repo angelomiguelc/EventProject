@@ -1,0 +1,3 @@
+const ADMIN_WALLET = "0xcd730f2837317AE1e1282410B126E33A0f32F933".toLowerCase();
+
+module.exports = { ADMIN_WALLET };
